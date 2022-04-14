@@ -411,6 +411,7 @@
         localStorage.setItem(this.courseName, JSON.stringify(courseInfo));
 
         this.getCourses();
+        this.showForm = false;
       },
       clear () {
         this.courseName = ''

@@ -6,8 +6,9 @@
         <span style="background-color: #58513f; height: 100%; width: fit-content; color: #d6c5b3" class="d-inline-flex align-center pa-2">
           Courses
         </span>
-        <span style="height: 100%; width: fit-content; color: #58513f" class="d-inline-flex align-center pa-2">
-          SOEN 345 |
+
+        <span v-for="course in courses" :key="course.courseName" style="height: 100%; width: fit-content; color: #58513f" class="d-inline-flex align-center pa-2">
+          {{course.courseName}} | 
         </span>
         <v-btn icon color="light-brown" class="float-right pa-2 mx-auto my-auto d-inline-flex align-center h-100" @click="changeState(true)">
           <v-icon>mdi-plus</v-icon>
@@ -16,99 +17,155 @@
       </div>
     </v-col>
   </v-row>
-  <v-row v-if="showForm" class="mt-0">
-    <v-col>
-      <div style="width: 50%; background-color:#d6c5b3; border-radius: 15px;" class="float-right pa-4">
-        <validation-observer
-    ref="observer"
-    v-slot="{ invalid }">
-    <form @submit.prevent="submit">
-      <validation-provider
-        v-slot="{ errors }"
-        name="Name"
-        rules="required|max:10"
-      >
-        <v-text-field
-          v-model="name"
-          :counter="10"
-          :error-messages="errors"
-          label="Name"
-          required
-        ></v-text-field>
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        name="phoneNumber"
-        :rules="{
-          required: true,
-          digits: 7,
-          regex: '^(71|72|74|76|81|82|84|85|86|87|88|89)\\d{5}$'
-        }"
-      >
-        <v-text-field
-          v-model="phoneNumber"
-          :counter="7"
-          :error-messages="errors"
-          label="Phone Number"
-          required
-        ></v-text-field>
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        name="email"
-        rules="required|email"
-      >
-        <v-text-field
-          v-model="email"
-          :error-messages="errors"
-          label="E-mail"
-          required
-        ></v-text-field>
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        name="select"
-        rules="required"
-      >
-        <v-select
-          v-model="select"
-          :items="items"
-          :error-messages="errors"
-          label="Select"
-          data-vv-name="select"
-          required
-        ></v-select>
-      </validation-provider>
-      <validation-provider
-        v-slot="{ errors }"
-        rules="required"
-        name="checkbox"
-      >
-        <v-checkbox
-          v-model="checkbox"
-          :error-messages="errors"
-          value="1"
-          label="Option"
-          type="checkbox"
-          required
-        ></v-checkbox>
-      </validation-provider>
 
-      <v-btn
-        class="mr-4"
-        type="submit"
-        :disabled="invalid"
-      >
-        submit
-      </v-btn>
-      <v-btn @click="clear">
-        clear
-      </v-btn>
-    </form>
-  </validation-observer>
+  <v-row v-if="showForm">
+    <v-col>
+      <div style="width: 80%; background-color:#d6c5b3; border-radius: 15px;" class="float-right pa-4">
+        <v-row>
+          <v-col>
+            <v-btn icon color="light-brown" class="float-right pa-2 mx-auto my-auto d-inline-flex align-center h-100" @click="changeState(false)">
+              <v-icon>mdi-cancel</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+
+        <v-row class="mt-0">
+          <v-col>
+            <div >
+              <validation-observer
+                ref="observer"
+                v-slot="{ invalid }">
+                
+                <form @submit.prevent="submit">
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="courseName"
+                    rules="required|max:10">
+                    <v-text-field
+                      v-model="courseName"
+                      :counter="10"
+                      :error-messages="errors"
+                      label="Course Name"
+                      required></v-text-field>
+                  </validation-provider>
+      
+                  <validation-provider
+                    v-slot="{ errors }"
+                    name="courseCredits"
+                    rules="required"
+                  >
+                    <v-select
+                      v-model="courseCredits"
+                      :items="courseCreditsItems"
+                      :error-messages="errors"
+                      label="Course Credits"
+                      data-vv-name="courseCredits"
+                      required
+                    ></v-select>
+                  </validation-provider>
+
+                  <validation-provider
+                      v-slot="{ errors }"
+                      name="difficultyLevel"
+                      rules="required">
+                      <v-slider
+                        hint="Please select this courses difficulty level"
+                        max="10"
+                        min="0"
+                        v-model="difficultyLevel"
+                        :error-messages="errors"
+                        label="Level of Difficulty"
+                        ticks="always"
+                        tick-size="1"
+                        thumb-color="#58513f"
+                        color="red"
+                                thumb-label="always"
+                        track-color="white"
+                        required
+                      ></v-slider>
+                    </validation-provider>
+                    
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="minimumHours"
+                      rules="required">
+                      <v-text-field
+                        v-model="minimumHours"
+                        :error-messages="errors"
+                        label="Minimum hours spent per week"
+                        required
+                      ></v-text-field>
+                    </validation-provider>
+
+                    <validation-provider
+                      v-slot="{ errors }"
+                      name="days"
+                      rules="required">
+                      <v-select
+                        v-model="days"
+                        :items="daysItems"
+                        :error-messages="errors"
+                        label="Days"
+                        data-vv-name="days"
+                        multiple
+                        chips
+                        required
+                      ></v-select>
+                    </validation-provider>
+
+                    <v-container>
+                    <h4>Pick your course times: </h4>
+                      <v-row>
+                        <v-col>
+                                <validation-provider
+                          v-slot="{ errors }"
+                          rules="required"
+                          name="courseStartTime"
+                          >
+                          <v-time-picker
+                            ampm-in-title
+                            :error-messages="errors"
+                            label="Course Start Time"
+                            format="ampm"
+                            v-model="courseStartTime"
+                            ></v-time-picker>
+                        </validation-provider>
+                        </v-col>
+                        <v-col>
+                          <validation-provider
+                          v-slot="{ errors }"
+                          rules="required"
+                          name="courseEndTime">
+                          <v-time-picker
+                            ampm-in-title
+                            :error-messages="errors"
+                            label="Course End Time"
+                            format="ampm"
+                            v-model="courseEndTime"
+
+                          ></v-time-picker>
+                        </validation-provider>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                    <v-btn
+                      class="mr-4"
+                      type="submit"
+                      :disabled="invalid">
+                      submit
+                    </v-btn>
+                    <v-btn @click="clear">
+                      clear
+                    </v-btn>
+                  </form>
+                </validation-observer>
+              </div>
+            </v-col>
+          </v-row>
       </div>
     </v-col>
   </v-row>
+
   <v-row class="fill-height">
     <v-col>
       <v-sheet height="100%">
@@ -191,13 +248,14 @@
       createEvent: null,
       createStart: null,
       extendOriginal: null,
-      showForm: true,
+      showForm: false,
+      courses: [],
       courseName: '',
       courseCredits: '',
       difficultyLevel: '',
       minimumHours: '',
-      select: null,
-      items: [
+      days: null,
+      daysItems: [
         'Monday',
         'Tuesday',
         'Wednesday',
@@ -205,6 +263,13 @@
         'Friday',
         'Saturday',
         'Sunday'
+      ],
+      courseCreditsItems: [
+        2,
+        3,
+        3.5,
+        4,
+        4.5
       ],
       courseStartTime: null,
       courseEndTime: null
@@ -335,6 +400,17 @@
       },
        submit () {
         this.$refs.observer.validate()
+
+        const courseInfo = {
+                            courseName: this.courseName, courseCredits: this.courseCredits, 
+                            difficultyLevel: this.difficultyLevel, minimumHours: this.minimumHours,
+                            courseStartTime: this.courseStartTime, courseEndTime: this.courseEndTime
+                          };
+
+        console.log("COURSE: ", JSON.stringify(courseInfo));
+        localStorage.setItem(this.courseName, JSON.stringify(courseInfo));
+
+        this.getCourses();
       },
       clear () {
         this.courseName = ''
@@ -345,7 +421,20 @@
         this.courseEndTime = null
         this.$refs.observer.reset()
       },
+      getCourses () {
+        this.courses = [];
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+        //console.log(key);
+          const course = JSON.parse(localStorage.getItem(key));
+          console.log(course);
+          this.courses.push(course);
+        });
+      },
     },
+    beforeMount() {
+      this.getCourses();
+    }
   }
 </script>
 <style scoped lang="scss">
@@ -377,6 +466,13 @@
   }
   &:hover::after {
     display: block;
+  }
+
+  .v-picker .v-card {
+    // this aint working for some add reason.
+    // date pickers are massive idk why
+    width: 50% !important;
+    max-width: 50% !important;
   }
 }
 </style>

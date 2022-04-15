@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="pa-4">
  <v-row>
     <v-col>
       <div class="rounded-l-xl rounded-r-xl " style="height: 50px; background-color: #d6c5b3; overflow: hidden;"> 
@@ -7,8 +7,8 @@
           Courses
         </span>
 
-        <span v-for="course in courses" :key="course.courseName" style="height: 100%; width: fit-content; color: #58513f" class="d-inline-flex align-center pa-2">
-          {{course.courseName}} | 
+        <span v-for="course in courses" :key="course.courseName" style="height: 100%; width: fit-content; color: #58513f; border-right: 1px solid #58513f;font-weight: bold;" class="d-inline-flex align-center pa-2">
+          {{course.courseName}} 
         </span>
         <v-btn icon color="light-brown" class="float-right pa-2 mx-auto my-auto d-inline-flex align-center h-100" @click="changeState(true)">
           <v-icon>mdi-plus</v-icon>
@@ -163,6 +163,18 @@
             </v-col>
           </v-row>
       </div>
+    </v-col>
+  </v-row>
+
+  <v-row>
+    <v-col>
+      <div style="background-color: #d6c5b3;" class="pa-4 rounded-lg">
+        <h4>Free days </h4>
+        <v-chip v-for="day in daysItems" :key="day" class="sched-chip pa-2 mr-2">
+              {{day}} 
+        </v-chip>
+      </div>
+
     </v-col>
   </v-row>
 
@@ -468,12 +480,18 @@
   &:hover::after {
     display: block;
   }
-
-  .v-picker .v-card {
-    // this aint working for some add reason.
-    // date pickers are massive idk why
-    width: 50% !important;
-    max-width: 50% !important;
-  }
 }
+  // .v-picker.v-card {
+  //   // this aint working for some add reason.
+  //   // date pickers are massive idk why
+  //   width: 48% !important;
+  //   max-width: 48% !important;
+  //   overflow: hidden;
+  // }
+
+  .sched-chip {
+    background-color: #58513f !important;
+    color: #d6c5b3 !important;
+  }
+
 </style>

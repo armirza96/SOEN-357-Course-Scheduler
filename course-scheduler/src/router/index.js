@@ -4,6 +4,6 @@ import Calendar from "../components/Calendar.vue";
 
 export default [
   { path: "/Login", component: Login },
-  { path: "/SignUp", component: SignUp },
+  { path: "/", component: SignUp },
   { path: "/Calendar", component: Calendar },
 ];

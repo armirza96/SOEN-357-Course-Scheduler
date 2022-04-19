@@ -11,8 +11,9 @@
                 >
               </v-toolbar>
               <v-card-text>
-                <v-form @submit.prevent="submitHandler" id="check-login-form">
+                <v-form @submit.prevent="submitHandler" id="check-login-form" method="post">
                   <v-text-field
+                    class="form-control"
                     name="login"
                     placeholder="John Doe"
                     label="🧍 Type your Username"
@@ -23,6 +24,7 @@
                     clearable
                   ></v-text-field>
                   <v-text-field
+                    class="form-control"
                     name="login"
                     placeholder="example@email.com"
                     label="🧍 Type your email"
@@ -33,8 +35,7 @@
                     clearable
                   ></v-text-field>
                   <v-text-field
-                    id="password"
-                    name="password"
+                    class="form-control"
                     placeholder="password"
                     label="🔒 Type your password"
                     v-model="password"
@@ -55,9 +56,9 @@
                   <a
                     href="/LogIn.vue/"
                     color="#f5f0ec !important"
-                    class="#f5f0ec-text"
-                    >LogIn</a
-                  >
+                    class="#f5f0ec-text">
+                    LogIn
+                    </a>
                 </div>
               </v-card-actions>
             </v-card>
@@ -69,6 +70,11 @@
 </template>
 
 <script>
+// import Vue from 'vue'   // in Vue 2
+// import axios from 'axios'
+// import VueAxios from 'vue-axios'
+
+// Vue.use(VueAxios, axios)
 export default {
   name: "SignUp",
   props: {
@@ -76,9 +82,9 @@ export default {
   },
   data(){
       return{
-          username: '',
-          email: '',
-          password: '',
+          username: "",
+          email: "",
+          password: "",
       }
   },
   methods:{
@@ -87,9 +93,21 @@ export default {
               username: this.username,
               email: this.email,
               password: this.password
-          }
+          };
 
-          console.log(data);
+        console.log(data)
+
+        // this.axios.post('http://localhost:8080/SignUp/', data)
+        // .then(
+        //     res => {
+        //         console.log(res)
+        //     }
+        // ).catch(
+        //     err => {
+        //         console.log(err)
+        //     }
+        // )
+        
       }
   },
 };

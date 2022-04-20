@@ -516,7 +516,7 @@ export default {
       };
 
       console.log("COURSE: ", JSON.stringify(courseInfo));
-      let courses = JSON.parse(localStorage.getItem("courses")) ?? [];
+      let courses = JSON.parse(localStorage.getItem("courses")) ?? {};
       courses[this.courseName] = courseInfo;
       localStorage.setItem("courses", JSON.stringify(courses));
       console.log("522",courses);
@@ -546,17 +546,15 @@ export default {
     },
     getCourses() {
       this.courses = [];
-      const keys = Object.keys(localStorage.getItem("courses"));
-      keys.forEach((key) => {
-        console.log(key);
-        const course = JSON.parse(localStorage.getItem(key));
-        console.log(course);
-        this.courses.push(course);
-      });
+      const courses = JSON.parse(localStorage.getItem("courses"));
+      for(const course in courses) {
+        console.log(courses[course]);
+        this.courses.push(courses[course]);
+      }
     },
   },
   beforeMount() {
-    // this.getCourses();
+     this.getCourses();
   },
 };
 </script>

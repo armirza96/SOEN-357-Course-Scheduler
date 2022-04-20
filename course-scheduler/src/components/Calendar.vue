@@ -515,24 +515,29 @@ export default {
         courseEndTime: this.courseEndTime,
       };
 
-      console.log("COURSE: ", JSON.stringify(courseInfo));
+      // console.log("COURSE: ", JSON.stringify(courseInfo));
       let courses = JSON.parse(localStorage.getItem("courses")) ?? {};
       courses[this.courseName] = courseInfo;
       localStorage.setItem("courses", JSON.stringify(courses));
-      console.log("522",courses);
 
+      let calendarEvents = JSON.parse(localStorage.getItem("events")) ?? {};
+      var colorOfClass = this.rndElement(this.colors);
       for (var i = 0; i < this.dates.length; i++) {
         this.createEvent = {
           name: this.courseName,
-          color: this.rndElement(this.colors),
+          color: colorOfClass,
           start: this.dates[i] + " " + this.courseStartTime,
           end: this.dates[i] + " " + this.courseEndTime,
           timed: true,
         };
         this.events.push(this.createEvent);
+        calendarEvents[this.dates[i]+this.courseStartTime] = this.createEvent;
+        localStorage.setItem("events", JSON.stringify(calendarEvents));
       }
 
+      this.getCalendarEvents();
       this.getCourses();
+      this.clear();
       this.showForm = false;
     },
     clear() {
@@ -547,14 +552,22 @@ export default {
     getCourses() {
       this.courses = [];
       const courses = JSON.parse(localStorage.getItem("courses"));
-      for(const course in courses) {
+      for (const course in courses) {
         console.log(courses[course]);
         this.courses.push(courses[course]);
       }
     },
+    getCalendarEvents() {
+      this.events = [];
+      const calendarEvents = JSON.parse(localStorage.getItem("events"));
+      for (const event in calendarEvents) {
+        this.events.push(calendarEvents[event]);
+      }
+    },
   },
   beforeMount() {
-     this.getCourses();
+    this.getCalendarEvents();
+    this.getCourses();
   },
 };
 </script>

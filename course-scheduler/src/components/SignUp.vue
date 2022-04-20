@@ -11,7 +11,7 @@
                 >
               </v-toolbar>
               <v-card-text>
-                <v-form @submit.prevent="submitHandler" id="check-login-form" method="post">
+                <v-form @submit.prevent="submitHandler" id="check-login-form">
                   <v-text-field
                     class="form-control"
                     name="login"
@@ -94,19 +94,8 @@ export default {
               email: this.email,
               password: this.password
           };
-
-        console.log(data)
-
-        // this.axios.post('http://localhost:8080/SignUp/', data)
-        // .then(
-        //     res => {
-        //         console.log(res)
-        //     }
-        // ).catch(
-        //     err => {
-        //         console.log(err)
-        //     }
-        // )
+        localStorage.setItem(this.email, JSON.stringify(data));
+        console.log("localStorage: ",localStorage)
         
       }
   },

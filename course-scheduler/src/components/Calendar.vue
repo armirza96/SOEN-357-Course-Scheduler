@@ -35,7 +35,7 @@
           <v-btn
             icon
             color="light-brown"
-            class="float-right pa-2 mx-auto my-auto d-inline-flex align-center h-100"
+            class="float-right mx-auto my-1 d-inline-flex align-center"
             @click="changeState(true)"
           >
             <v-icon>mdi-plus</v-icon>
@@ -128,12 +128,12 @@
                     ></v-text-field>
                   </validation-provider>
 
-                  <validation-provider
+                  <!-- <validation-provider
                     v-slot="{ errors }"
                     name="days"
                     rules="required"
-                  >
-                    <v-select
+                  > -->
+                  <!-- <v-select
                       v-model="days"
                       :items="daysItems"
                       :error-messages="errors"
@@ -142,8 +142,44 @@
                       multiple
                       chips
                       required
-                    ></v-select>
-                  </validation-provider>
+                    ></v-select> -->
+                  <v-menu
+                    ref="menu"
+                    v-model="menu"
+                    :close-on-content-click="false"
+                    :return-value.sync="dates"
+                    transition="scale-transition"
+                    offset-y
+                    min-width="auto"
+                  >
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-combobox
+                        v-model="dates"
+                        multiple
+                        chips
+                        small-chips
+                        label="Multiple picker in menu"
+                        prepend-icon="mdi-calendar"
+                        readonly
+                        v-bind="attrs"
+                        v-on="on"
+                      ></v-combobox>
+                    </template>
+                    <v-date-picker v-model="dates" multiple no-title scrollable>
+                      <v-spacer></v-spacer>
+                      <v-btn text color="primary" @click="menu = false">
+                        Cancel
+                      </v-btn>
+                      <v-btn
+                        text
+                        color="primary"
+                        @click="$refs.menu.save(dates)"
+                      >
+                        OK
+                      </v-btn>
+                    </v-date-picker>
+                  </v-menu>
+                  <!-- </validation-provider> -->
 
                   <v-container>
                     <h4>Pick your course times:</h4>
@@ -232,20 +268,15 @@
             :event-color="getEventColor"
             :event-ripple="false"
             @change="getEvents"
-            @mousedown:event="startDrag"
-            @mousedown:time="startTime"
-            @mousemove:time="mouseMove"
-            @mouseup:time="endDrag"
-            @mouseleave.native="cancelDrag"
           >
-            <template v-slot:event="{ event, timed, eventSummary }">
+            <!-- <template v-slot:event="{ event, timed, eventSummary }">
               <div class="v-event-draggable" v-html="eventSummary()"></div>
               <div
                 v-if="timed"
                 class="v-event-drag-bottom"
                 @mousedown.stop="extendBottom(event)"
               ></div>
-            </template>
+            </template> -->
           </v-calendar>
         </v-sheet>
       </v-col>
@@ -288,7 +319,7 @@ extend("email", {
 });
 
 export default {
-  name: "HelloWorld",
+  name: "Calendar-page",
   components: {
     ValidationProvider,
     ValidationObserver,
@@ -336,6 +367,7 @@ export default {
       "Saturday",
       "Sunday",
     ],
+    dates: [],
     courseCreditsItems: [2, 3, 3.5, 4, 4.5],
     courseStartTime: null,
     courseEndTime: null,
@@ -344,78 +376,78 @@ export default {
     changeState(showForm) {
       this.showForm = showForm;
     },
-    startDrag({ event, timed }) {
-      if (event && timed) {
-        this.dragEvent = event;
-        this.dragTime = null;
-        this.extendOriginal = null;
-      }
-    },
-    startTime(tms) {
-      const mouse = this.toTime(tms);
-      if (this.dragEvent && this.dragTime === null) {
-        const start = this.dragEvent.start;
-        this.dragTime = mouse - start;
-      } else {
-        this.createStart = this.roundTime(mouse);
-        this.createEvent = {
-          name: `Event #${this.events.length}`,
-          color: this.rndElement(this.colors),
-          start: this.createStart,
-          end: this.createStart,
-          timed: true,
-        };
-        this.events.push(this.createEvent);
-      }
-    },
-    extendBottom(event) {
-      this.createEvent = event;
-      this.createStart = event.start;
-      this.extendOriginal = event.end;
-    },
-    mouseMove(tms) {
-      const mouse = this.toTime(tms);
-      if (this.dragEvent && this.dragTime !== null) {
-        const start = this.dragEvent.start;
-        const end = this.dragEvent.end;
-        const duration = end - start;
-        const newStartTime = mouse - this.dragTime;
-        const newStart = this.roundTime(newStartTime);
-        const newEnd = newStart + duration;
-        this.dragEvent.start = newStart;
-        this.dragEvent.end = newEnd;
-      } else if (this.createEvent && this.createStart !== null) {
-        const mouseRounded = this.roundTime(mouse, false);
-        const min = Math.min(mouseRounded, this.createStart);
-        const max = Math.max(mouseRounded, this.createStart);
-        this.createEvent.start = min;
-        this.createEvent.end = max;
-      }
-    },
-    endDrag() {
-      this.showForm = true;
-      this.dragTime = null;
-      this.dragEvent = null;
-      this.createEvent = null;
-      this.createStart = null;
-      this.extendOriginal = null;
-    },
-    cancelDrag() {
-      if (this.createEvent) {
-        if (this.extendOriginal) {
-          this.createEvent.end = this.extendOriginal;
-        } else {
-          const i = this.events.indexOf(this.createEvent);
-          if (i !== -1) {
-            this.events.splice(i, 1);
-          }
-        }
-      }
-      this.createEvent = null;
-      this.createStart = null;
-      this.dragTime = null;
-      this.dragEvent = null;
-    },
+    // startDrag({ event, timed }) {
+    //   if (event && timed) {
+    //     this.dragEvent = event;
+    //     this.dragTime = null;
+    //     this.extendOriginal = null;
+    //   }
+    // },
+    // startTime(tms) {
+    //   const mouse = this.toTime(tms);
+    //   if (this.dragEvent && this.dragTime === null) {
+    //     const start = this.dragEvent.start;
+    //     this.dragTime = mouse - start;
+    //   } else {
+    //     this.createStart = this.roundTime(mouse);
+    //     this.createEvent = {
+    //       name: `Event #${this.events.length}`,
+    //       color: this.rndElement(this.colors),
+    //       start: this.createStart,
+    //       end: this.createStart,
+    //       timed: true,
+    //     };
+    //     this.events.push(this.createEvent);
+    //   }
+    // },
+    // extendBottom(event) {
+    //   this.createEvent = event;
+    //   this.createStart = event.start;
+    //   this.extendOriginal = event.end;
+    // },
+    // mouseMove(tms) {
+    //   const mouse = this.toTime(tms);
+    //   if (this.dragEvent && this.dragTime !== null) {
+    //     const start = this.dragEvent.start;
+    //     const end = this.dragEvent.end;
+    //     const duration = end - start;
+    //     const newStartTime = mouse - this.dragTime;
+    //     const newStart = this.roundTime(newStartTime);
+    //     const newEnd = newStart + duration;
+    //     this.dragEvent.start = newStart;
+    //     this.dragEvent.end = newEnd;
+    //   } else if (this.createEvent && this.createStart !== null) {
+    //     const mouseRounded = this.roundTime(mouse, false);
+    //     const min = Math.min(mouseRounded, this.createStart);
+    //     const max = Math.max(mouseRounded, this.createStart);
+    //     this.createEvent.start = min;
+    //     this.createEvent.end = max;
+    //   }
+    // },
+    // endDrag() {
+    //   this.showForm = true;
+    //   this.dragTime = null;
+    //   this.dragEvent = null;
+    //   this.createEvent = null;
+    //   this.createStart = null;
+    //   this.extendOriginal = null;
+    // },
+    // cancelDrag() {
+    //   if (this.createEvent) {
+    //     if (this.extendOriginal) {
+    //       this.createEvent.end = this.extendOriginal;
+    //     } else {
+    //       const i = this.events.indexOf(this.createEvent);
+    //       if (i !== -1) {
+    //         this.events.splice(i, 1);
+    //       }
+    //     }
+    //   }
+    //   this.createEvent = null;
+    //   this.createStart = null;
+    //   this.dragTime = null;
+    //   this.dragEvent = null;
+    // },
     roundTime(time, down = true) {
       const roundTo = 15; // minutes
       const roundDownTime = roundTo * 60 * 1000;
@@ -484,17 +516,21 @@ export default {
       };
 
       console.log("COURSE: ", JSON.stringify(courseInfo));
-      localStorage.setItem(this.courseName, JSON.stringify(courseInfo));
+      let courses = JSON.parse(localStorage.getItem("courses")) ?? [];
+      courses[this.courseName] = courseInfo;
+      localStorage.setItem("courses", JSON.stringify(courses));
+      console.log("522",courses);
 
-      this.createEvent = {
-        name: this.courseName,
-        color: this.rndElement(this.colors),
-        start: "2022-04-15 02:15",
-        end: "2022-04-15 04:15",
-        timed: true,
-      };
-
-      this.events.push(this.createEvent);
+      for (var i = 0; i < this.dates.length; i++) {
+        this.createEvent = {
+          name: this.courseName,
+          color: this.rndElement(this.colors),
+          start: this.dates[i] + " " + this.courseStartTime,
+          end: this.dates[i] + " " + this.courseEndTime,
+          timed: true,
+        };
+        this.events.push(this.createEvent);
+      }
 
       this.getCourses();
       this.showForm = false;
@@ -510,9 +546,9 @@ export default {
     },
     getCourses() {
       this.courses = [];
-      const keys = Object.keys(localStorage);
+      const keys = Object.keys(localStorage.getItem("courses"));
       keys.forEach((key) => {
-        //console.log(key);
+        console.log(key);
         const course = JSON.parse(localStorage.getItem(key));
         console.log(course);
         this.courses.push(course);
@@ -520,7 +556,7 @@ export default {
     },
   },
   beforeMount() {
-    this.getCourses();
+    // this.getCourses();
   },
 };
 </script>

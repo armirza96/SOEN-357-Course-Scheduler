@@ -65,16 +65,10 @@ export default {
               password: this.password
           };
       console.log("Data: ", data);
-      // const keys = Object.keys(localStorage);
-      // keys.forEach((key) => {
-      //   console.log("Keys: ", key);
-      // });
-      // console.log("Matched Key: ", localStorage[this.email]);
       const myJSON = localStorage[this.email];
       const myObj = JSON.parse(myJSON); 
-      // console.log("My email: ", myObj.email);
       if(myObj.email == this.email && myObj.password == this.password){
-        this.$router.push('/Calendar')
+        this.$router.push({path: '/Calendar'})
         console.log("Success");
       }else{
         console.log("Fail to Login");

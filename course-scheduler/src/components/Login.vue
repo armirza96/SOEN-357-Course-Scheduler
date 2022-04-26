@@ -67,12 +67,12 @@ export default {
       console.log("Data: ", data);
       const myJSON = localStorage[this.email];
       const myObj = JSON.parse(myJSON); 
-      if(myObj.email == this.email && myObj.password == this.password){
-        this.$router.push({path: '/Calendar'})
-        console.log("Success");
-      }else{
-        console.log("Fail to Login");
-      }
+        if(myObj.email == this.email && myObj.password == this.password){
+          this.$router.push({path: '/HomePage'})
+          console.log("Success");
+        }else{
+          console.log("Fail to Login");
+        }
       }
   },
 
